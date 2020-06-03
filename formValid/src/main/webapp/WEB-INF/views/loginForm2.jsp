@@ -23,7 +23,7 @@
 				<td><form:errors path="id" cssClass="errorMsg" /></td>
 			</tr>
 			<tr>
-				<td>PWD :</td>
+				<td>PWD :</td> 
 				<td><form:input path="pwd" /></td>
 				<td><form:errors path="pwd" cssClass="errorMsg" /></td>
 			</tr>

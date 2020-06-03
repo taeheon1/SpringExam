@@ -15,5 +15,4 @@ public class ExamMain {
 		System.out.println("beanTest1 : " + beanTest1 );
 		System.out.println("beanTest2 : " + beanTest2 );
 	}
-
 }
