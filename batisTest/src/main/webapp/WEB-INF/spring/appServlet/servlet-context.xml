@@ -23,7 +23,7 @@
 		<beans:property name="contentType" value="text/html; charset=UTF-8" />
 	</beans:bean>
 
-	<beans:bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource">
+<!-- 	<beans:bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource">
 		<beans:property name="dataSourceName" value="ds" />
 		<beans:property name="URL" value="jdbc:oracle:thin:@localhost:1521:xe" />
 		<beans:property name="user" value="work" />
@@ -37,7 +37,7 @@
 
 	<beans:bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
-	</beans:bean>
+	</beans:bean> -->
 
 	<context:component-scan base-package="org.kdea.mybatis" />
 
