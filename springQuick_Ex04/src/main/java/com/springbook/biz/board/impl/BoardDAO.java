@@ -6,9 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.springbook.biz.board.BoardBean;
 import com.springbook.view.common.JDBCUtil;
 
+@Repository
 public class BoardDAO {
 	// JDBC 관련 변수
 	private Connection conn = null;
@@ -22,8 +25,11 @@ public class BoardDAO {
 	private final String BOARD_DELETE = "DELETE FROM board WHERE seq = ?";
 	private final String BOARD_GET = "SELECT * FROM board WHERE seq = ?";
 	private final String BOARD_LIST = "SELECT * FROM board ORDER BY seq DESC";
+	private final String BOARD_LIST_T = "SELECT * FROM board WHERE title LIKE '%'||?||'%' ORDER BY seq DESC";
+	private final String BOARD_LIST_C = "SELECT * FROM board WHERE content LIKE '%'||?||'%' ORDER BY seq DESC";
 
 	// CRUD 기능의 메소드 구현
+
 	// 글 등록
 	public void insertBoard(BoardBean bean) {
 		System.out.println("===> JDBC로 insertBoard() 기능 처리");
@@ -106,7 +112,12 @@ public class BoardDAO {
 		List<BoardBean> boardList = new ArrayList<BoardBean>();
 		try {
 			conn = JDBCUtil.getConnection();
-			stmt = conn.prepareStatement(BOARD_LIST);
+			if (bean.getSearchCondition().equals("TITLE")) {
+				stmt = conn.prepareStatement(BOARD_LIST_T);
+			} else if (bean.getSearchKeyword().equals("CONTENT")) {
+				stmt = conn.prepareStatement(BOARD_LIST_C);
+			}
+			stmt.setString(1, bean.getSearchKeyword());
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				BoardBean board = new BoardBean();
@@ -123,7 +134,6 @@ public class BoardDAO {
 		} finally {
 			JDBCUtil.close(rs, stmt, conn);
 		}
-
 		return boardList;
 	}
 }

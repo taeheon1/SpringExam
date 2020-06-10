@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface BoardService {
 	// CRUD 기능의 메소드 구현
+	
 	// 글 등록
 	void insertBoard(BoardBean bean);
 

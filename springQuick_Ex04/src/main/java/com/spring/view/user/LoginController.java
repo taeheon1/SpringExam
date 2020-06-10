@@ -21,7 +21,9 @@ public class LoginController {
 
 	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
 	public String login(UserBean bean, UserDAO userDAO, HttpSession session) {
-		System.out.println("로그인 인증 처리...");
+		if(bean.getId() == null || bean.getId().equals("")) {
+			throw new IllegalArgumentException("아이디는 반드시 입력해야 합니다.");
+		}
 		UserBean user = userDAO.getUser(bean);
 		if (user != null) {
 			session.setAttribute("userName", user.getName());

@@ -1,21 +1,62 @@
 package com.spring.view.board;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.springbook.biz.board.BoardBean;
-import com.springbook.biz.board.impl.BoardDAO;
+import com.springbook.biz.board.BoardService;
 
 @Controller
 @SessionAttributes("board")
 public class BoardController {
+	@Autowired
+	private BoardService boardService;
+	
+	// 글 등록
+	@RequestMapping("/insertBoard.do")
+	public String insertBoard(BoardBean bean) throws IOException {
+		//파일 업로드 처리
+		MultipartFile uploadFile = bean.getUploadFile();
+		if(!uploadFile.isEmpty()) {
+			String fileName = uploadFile.getOriginalFilename();
+			uploadFile.transferTo(new File("D:/" + fileName));
+		}
+		
+		boardService.insertBoard(bean);
+		return "getBoardList.do";
+	}
+	
+	// 글 수정
+	@RequestMapping("/updateBoard.do")
+	public String updateBoard(@ModelAttribute("board") BoardBean bean){
+		boardService.updateBoard(bean);
+		return "getBoardList.do";
+	}
+	
+	// 글 삭제
+	@RequestMapping("/deleteBoard.do")
+	public String deleteBoard(BoardBean bean){
+		boardService.deleteBoard(bean);
+		return "getBoardList.do";
+	}
+	
+	// 글 상세 조회
+	@RequestMapping("/getBoard.do")
+	public String getBoard(BoardBean bean, Model model) {
+		model.addAttribute("board", boardService.getBoard(bean));
+		return "getBoard.jsp";
+	}
 
 	// 검색 조건 목록 설정
 	@ModelAttribute("conditionMap")
@@ -25,48 +66,16 @@ public class BoardController {
 		conditionMap.put("내용", "CONTENT");
 		return conditionMap;
 	}
-	
-	// 글 등록
-	@RequestMapping("/insertBoard.do")
-	public String insertBoard(BoardBean bean, BoardDAO boardDAO) {
-		boardDAO.insertBoard(bean);
-		return "getBoardList.do";
-	}
-	
-	// 글 수정
-	@RequestMapping("/updateBoard.do")
-	public String updateBoard(@ModelAttribute("board") BoardBean bean, BoardDAO boardDAO){
-		System.out.println("번호 : " + bean.getSeq());
-		System.out.println("제목 : " + bean.getTitle());
-		System.out.println("작성자 : " + bean.getWriter());
-		System.out.println("내용 : " + bean.getContent());
-		System.out.println("등록일 : " + bean.getRegdate());
-		System.out.println("조회수 : " + bean.getCnt());
-		boardDAO.updateBoard(bean);
-		return "getBoardList.do";
-	}
-	
-	// 글 삭제
-	@RequestMapping("/deleteBoard.do")
-	public String deleteBoard(BoardBean bean, BoardDAO boardDAO){
-		boardDAO.deleteBoard(bean);
-		return "getBoardList.do";
-	}
-	
-	// 글 상세 조회
-	@RequestMapping("/getBoard.do")
-	public String getBoard(BoardBean bean, BoardDAO boardDAO, Model model) {
-		model.addAttribute("board", boardDAO.getBoard(bean));
-		return "getBoard.jsp";
-	}
-	
+	 
 	// 글 목록 검색
 	@RequestMapping("/getBoardList.do")
 	public String getBoardList(@RequestParam(value="serchCondition", defaultValue="TITLE", required = false) String condition, @RequestParam(value="searchKeyword",
-	defaultValue="", required = false) String keyword, BoardBean bean, BoardDAO boardDAO, Model model) {
-		System.out.println("검색 조건 : " + condition);
-		System.out.println("검색 단어 : " + keyword);
-		model.addAttribute("boardList", boardDAO.getBoardList(bean));
-		return "getBoardList.jsp";
+	defaultValue="", required = false) String keyword, BoardBean bean, Model model) {
+		// Null check
+		if(bean.getSearchCondition() == null) bean.setSearchCondition("TITLE");
+		if(bean.getSearchKeyword() == null) bean.setSearchKeyword("");
+		// Model 정보 저장
+		model.addAttribute("boardList", boardService.getBoardList(bean));
+		return "getBoardList.jsp"; // View 이름 리턴
 	}
 }

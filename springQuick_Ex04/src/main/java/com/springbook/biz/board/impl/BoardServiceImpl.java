@@ -2,10 +2,15 @@ package com.springbook.biz.board.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.springbook.biz.board.BoardBean;
 import com.springbook.biz.board.BoardService;
 
+@Service("boardService")
 public class BoardServiceImpl implements BoardService {
+	@Autowired
 	private BoardDAO boardDAO;
 
 	public BoardServiceImpl() {

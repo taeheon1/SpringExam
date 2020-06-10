@@ -10,7 +10,9 @@ import com.springbook.biz.board.BoardBean;
 
 @Repository
 public class BoardDAOSpring {
-
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
 	// SQL 명령어들
 	private final String BOARD_INSERT = "INSERT INTO board(seq, title, writer, content) "
 			+ "VALUES ((SELECT NVL(MAX(seq), 0) + 1 FROM board), ?, ?, ?)";
@@ -18,9 +20,8 @@ public class BoardDAOSpring {
 	private final String BOARD_DELETE = "DELETE FROM board WHERE seq = ?";
 	private final String BOARD_GET = "SELECT * FROM board WHERE seq = ?";
 	private final String BOARD_LIST = "SELECT * FROM board ORDER BY seq DESC";
-
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private final String BOARD_LIST_T = "SELECT * FROM board WHERE title LIKE '%'||?||'%' ORDER BY seq DESC";
+	private final String BOARD_LIST_C = "SELECT * FROM board WHERE content LIKE '%'||?||'%' ORDER BY seq DESC";
 
 	// CRUD 기능의 메소드 구현
 	// 글 등록
@@ -52,7 +53,12 @@ public class BoardDAOSpring {
 	// 글 목록 조회
 	public List<BoardBean> getBoardList(BoardBean bean) {
 		System.out.println("===> JDBC로 getBoardList() 기능 처리");
-
-		return jdbcTemplate.query(BOARD_LIST, new BoardRowMapper());
+		Object[] args = { bean.getSearchKeyword() };
+		if (bean.getSearchCondition().equals("TITLE")) {
+			return jdbcTemplate.query(BOARD_LIST_T, args, new BoardRowMapper());
+		} else if (bean.getSearchCondition().equals("CONTENT")) {
+			return jdbcTemplate.query(BOARD_LIST_C, args, new BoardRowMapper());
+		}
+		return null;
 	}
 }

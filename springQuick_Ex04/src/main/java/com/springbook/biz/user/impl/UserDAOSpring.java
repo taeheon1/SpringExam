@@ -13,6 +13,8 @@ import com.springbook.biz.user.UserBean;
 
 @Repository
 public class UserDAOSpring {
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
 	// SQL 명령어들
 	private final String USER_INSERT = "INSERT INTO users(id, password, name, role) VALUES (?, ?, ?, ?)";
@@ -20,9 +22,6 @@ public class UserDAOSpring {
 	private final String USER_DELETE = "DELETE FROM users WHERE id = ?";
 	private final String USER_GET = "SELECT * FROM users WHERE id = ? AND password = ?";
 	private final String USER_LIST = "SELECT * FROM users";
-
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
 
 	// CRUD 기능의 메소드 구현
 	// 회원 등록
