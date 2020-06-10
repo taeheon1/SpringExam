@@ -14,7 +14,16 @@ public class BoardBean {
 	private String searchCondition;
 	private String searchKeyword;
 	private MultipartFile uploadFile;
-	
+	private String fileName;
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	public String getSearchCondition() {
 		return searchCondition;
 	}
@@ -30,7 +39,7 @@ public class BoardBean {
 	public void setSearchKeyword(String searchKeyword) {
 		this.searchKeyword = searchKeyword;
 	}
-	
+
 	public MultipartFile getUploadFile() {
 		return uploadFile;
 	}

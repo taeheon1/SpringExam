@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,12 +29,16 @@ public class BoardController {
 	@RequestMapping("/insertBoard.do")
 	public String insertBoard(BoardBean bean) throws IOException {
 		//파일 업로드 처리
+		String fileName = null;
 		MultipartFile uploadFile = bean.getUploadFile();
 		if(!uploadFile.isEmpty()) {
-			String fileName = uploadFile.getOriginalFilename();
-			uploadFile.transferTo(new File("D:/" + fileName));
+			String originalFileName = uploadFile.getOriginalFilename();
+			String ext = FilenameUtils.getExtension(originalFileName);
+			UUID uuid = UUID.randomUUID();
+			fileName=uuid + "." +ext;
+			uploadFile.transferTo(new File("C:\\upload\\" + fileName));
 		}
-		
+		bean.setFileName(fileName);
 		boardService.insertBoard(bean);
 		return "getBoardList.do";
 	}

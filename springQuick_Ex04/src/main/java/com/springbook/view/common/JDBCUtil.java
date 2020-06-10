@@ -11,7 +11,7 @@ public class JDBCUtil {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 //			Class.forName("oracle.jdbc.pool.OracleDataSource");
-			return DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "work", "1234");
+			return DriverManager.getConnection("jdbc:oracle:thin:@218.50.121.249:1521:orcl", "taeh", "0201");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

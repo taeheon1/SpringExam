@@ -19,8 +19,8 @@ public class BoardDAO {
 	private ResultSet rs = null;
 
 	// SQL 명령어들
-	private final String BOARD_INSERT = "INSERT INTO board(seq, title, writer, content) "
-			+ "VALUES ((SELECT NVL(MAX(seq), 0) + 1 FROM board), ?, ?, ?)";
+	private final String BOARD_INSERT = "INSERT INTO board(seq, title, writer, content, filename) "
+			+ "VALUES ((SELECT NVL(MAX(seq), 0) + 1 FROM board), ?, ?, ?, ?)";
 	private final String BOARD_UPDATE = "UPDATE board SET title = ?, content = ? WHERE seq = ?";
 	private final String BOARD_DELETE = "DELETE FROM board WHERE seq = ?";
 	private final String BOARD_GET = "SELECT * FROM board WHERE seq = ?";
@@ -39,6 +39,7 @@ public class BoardDAO {
 			stmt.setString(1, bean.getTitle());
 			stmt.setString(2, bean.getWriter());
 			stmt.setString(3, bean.getContent());
+			stmt.setString(4, bean.getFileName());
 			stmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,6 +97,7 @@ public class BoardDAO {
 				board.setContent(rs.getString("CONTENT"));
 				board.setRegdate(rs.getDate("REGDATE"));
 				board.setCnt(rs.getInt("CNT"));
+				board.setFileName(rs.getString("FILENAME"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
