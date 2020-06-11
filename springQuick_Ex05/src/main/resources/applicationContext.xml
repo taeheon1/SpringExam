@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:component-scan base-package="com.springbook.biz" />
+
+	<!-- DataSource 설정 -->
+	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource">
+		<property name="dataSourceName" value="ds" />
+		<property name="URL" value="jdbc:oracle:thin:@218.50.121.249:1521:orcl" />
+		<property name="user" value="taeh" />
+		<property name="password" value="0201" />
+	</bean>
+
+	<!-- Spring JDBC 설정 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- Mybtis 연동 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:sql-map-config.xml"/>
+	</bean>
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+</beans>
