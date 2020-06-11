@@ -1,21 +1,31 @@
 package com.springbook.biz.board;
 
-import java.sql.Date;
+import java.util.Date;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.web.multipart.MultipartFile;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class BoardBean {
+	@XmlAttribute
 	private int seq;
 	private String title;
 	private String writer;
 	private String content;
 	private Date regdate;
 	private int cnt;
+	@XmlTransient
 	private String searchCondition;
+	@XmlTransient
 	private String searchKeyword;
+	@XmlTransient
 	private MultipartFile uploadFile;
 	private String fileName;
-
+	
 	public String getFileName() {
 		return fileName;
 	}
